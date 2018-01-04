@@ -42,16 +42,21 @@ Usage: python getipport.py -x nmap-output.xml
                 continue
             ports = host.find('ports')    # 找到host节点下的所有ports节点
             oslist = host.find('os')
+            os_macth_list = oslist.findall('osmatch')
         except Exception, e:
             continue
         
-        first_os_match = oslist.findall('osmatch')[0].get('name').lower()  #取第一个最大可能性的OS
-        if (first_os_match.find('linux') >= 0 ):
-        	os = 'linux  '
-        elif  (first_os_match.find('windows') >= 0 ):
-            os = 'windows'
-        else: 
-        	os = 'unknown'
+        print 'find '+addr 
+        if len(os_macth_list) == 0:
+            os = 'unknown'
+        else:
+            first_os_match = os_macth_list[0].get('name').lower()   #取第一个最大可能性的OS
+            if (first_os_match.find('linux') >= 0 ):
+        	    os = 'linux  '
+            elif  (first_os_match.find('windows') >= 0 ):
+                os = 'windows'
+            else:
+        	    os = 'unknown'
         weblogic_found = False;
         for port in ports.findall('port'):   # 找到ports节点下的所有port节点
             try:
